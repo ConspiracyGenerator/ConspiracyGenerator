@@ -64,11 +64,12 @@ function processInput() {
 		
 		var reader = new FileReader();
 		reader.onloadend = function () {
+			console.log("done processing");
 			img.src = reader.result;
 			img.onload = function() {
 				
 				scaleFactor = 1.01 + 0.002 * img.width/100
-
+				//dAlert(scaleFactor)
 				if(scaleFactor <= 1) {
 					scaleFactor = 1.01
 				} 
@@ -85,6 +86,7 @@ function processInput() {
 			}
 		}
 		reader.readAsDataURL(file);
+		console.log("sending file");
 		
 		document.getElementById("submit").disabled = true;
 		
@@ -100,59 +102,50 @@ function redraw() {
 	
 }
 
-// Finds faces to avoid 
 function findFaces() {
 	
 	toggleLoading()
-	
-	// Chose random but non-facial areas to zoom to.
 	function getFaceData(result) {
 		var data = result.result;
+		var current;
+		var smallest;
+		if (data.length == 0) {
+			smallest = null; 
+		}
+		else {
+			smallest = [data[0].x, data[0].y, data[0].width];
+		}
+		
+		for (var i = 1; i < data.length; i++) {
+			current = data[i];
+			if (current.width < smallest.width) { //always squares
+				smallest = [current.x, current.y, data[0].width];
+			}
+		}
+		
+		if (smallest) {
+			console.log("smallest existed");
+			playSpook([(2 * smallest[0] + smallest[2])/2,
+					 (2 * smallest[1] + smallest[2])/2,
+					  smallest[2]]);
+		}
+		else {
+			console.log("randomed");
+			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
+			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
 
-		var rX;
-		var rY;
-		rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
-		
-		
-		// Check if x within face
-		var withinFace = true
-		while(withinFace) {
-			rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
-			withinFace = false
-			for(var i = 0; i < data.length; i++) {
-				if(rX == data[i].x){
-					withinFace = true;
-				}
-			}
+			playSpook([rX, rY, 100]); 
 		}
-		
-		
-		withinFace = true
-		// Check if y within face
-		while(withinFace) {
-			rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
-			withinFace = false
-			for(var i = 0; i < data.length; i++) {
-				if(rY == data[i].y) {
-					withinFace = true;
-				}
-			}
-		}
-		
-	
-		playSpook([rX, rY, 100]); 
-		
 	}
-
 	
 	var input = [
 		c.toDataURL()
 	]
 	
 	Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
-		.algo("algo://opencv/FaceDetectionBox/0.1.x")
-		.pipe(input)
-		.then(getFaceData);	
+           .algo("algo://opencv/FaceDetectionBox/0.1.x")
+           .pipe(input)
+           .then(getFaceData);	
 }
 
 function playSpook(coordinates) {
@@ -183,16 +176,12 @@ function playSpook(coordinates) {
 function panZoomPoint(x,y,width,callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
-		var r = width * .2
-		
+		var r = width * .2;
 		// Draw circle
 		drawCircle(x,y,r);
-		
+
 		// Draw illuminati
 		ilum = document.getElementById("ilum");
-
-		imgWidth = ilum.width;
-		imgHeight = ilum.height;
 
 		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
@@ -239,7 +228,7 @@ function zoomPoint(x, y, scaleFactor) {
 // SVG matrix for zooming.
 function setUpZoom() {
 	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
-	var xform = svg.createSVGMatrix()
+	xform = svg.createSVGMatrix()
 	
 	var scale = ctx.scale;
 	ctx.scale = function(sx,sy){
@@ -272,7 +261,7 @@ function setUpZoom() {
 			return setTransform.call(ctx,a,b,c,d,e,f);
 		};
 	
-	var pt = svg.createSVGPoint();
+	var pt  = svg.createSVGPoint();
 	ctx.transformedPoint = function(x,y){
 			pt.x=x; pt.y=y;
 			return pt.matrixTransform(xform.inverse());
@@ -289,26 +278,13 @@ function reset() {
 function toggleLoading() {
 
 	var loading = document.getElementById("loading");
-	title = document.getElementById("title")
-	play = document.getElementById("play")
-	browser = document.getElementById("input")
 	
 	if(loading.style.visibility == "hidden") {
-		c.style.visibility = "hidden";
+		c.style.visibility = "hidden"
 		loading.style.visibility = "visible";
-		play.disabled = true;
-		browser.disabled = true;
-		
-		title.innerHTML = "Conspiring...";
 	} else {
-		c.style.visibility = "visible";
+		c.style.visibility = "visible"
 		loading.style.visibility = "hidden";
-		play.disabled = false;
-		browser.disabled = false;
-		
-		
-		// Changes title back to conspiracy generator
-		title.innerHTML = "Conspiracy Generator"
 	}
 	
 }

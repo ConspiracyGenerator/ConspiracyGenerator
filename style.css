@@ -18,6 +18,7 @@
 
 #ilum {
 	display: none;
+	z-index: 5;
 }
 
 #loading {
@@ -51,7 +52,7 @@ h1 {
 
 }
 
-#imgC {
+canvas {
 	margin: 10px;
 	width: 90%;
 	
