@@ -5,7 +5,7 @@ dAlert = function(string) {
 	alert(string)
 }
 
-var c, ctx;
+var c, ctx, img;
 
 window.onload = function() {
 	//alert("hello world");
@@ -14,6 +14,7 @@ window.onload = function() {
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
+	setUpZoom()
 	
 }
 
@@ -35,7 +36,7 @@ processInput = function() {
 	console.log(file)
 	
 	// Create img
-	var img = document.createElement("img");
+	img = document.createElement("img");
     img.file = file;
     //document.append(img); // 
     
@@ -43,10 +44,10 @@ processInput = function() {
     reader.onloadend = function () {
 		console.log("done processing")
 		img.src = reader.result;
-		ctx.drawImage(img, 0, 0, c.width, c.height);
-		ctx.clearRect(0, 0, c.width, c.height);
-		zoomPoint(450, 450, img);
-		ctx.drawImage(img, 0, 0, c.width, c.height);	
+		img.onload = function() {
+			redraw();
+			zoomPoint(400,250)
+		}
 	}
     reader.readAsDataURL(file);
 	
@@ -54,13 +55,66 @@ processInput = function() {
 	
 }
 
+// Clears and redraws the canvas
+redraw = function() {
+	ctx.clearRect(0, 0, c.width, c.height);
+	ctx.drawImage(img, 0, 0, c.width, c.height);
+	
+}
+
 zoomPoint = function(x, y) {
-		
-	ctx.translate(-x, -y);
-	ctx.scale(2,2);
+	scaleFactor = 1.1
+	var pt = ctx.transformedPoint(x,y)
+	ctx.translate(pt.x,pt.y)
+	ctx.scale(scaleFactor,scaleFactor)
+	ctx.translate(-pt.x,-pt.y)
+	redraw();
 		
 }
 
+// Redefines some CTX functions and sets up an 
+// SVG matrix for zooming.
+setUpZoom = function() {
+	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+	xform = svg.createSVGMatrix()
+	
+	var scale = ctx.scale;
+	ctx.scale = function(sx,sy){
+		xform = xform.scaleNonUniform(sx,sy);
+		return scale.call(ctx,sx,sy);
+	}
+
+	var translate = ctx.translate;
+	ctx.translate = function(dx,dy){
+		xform = xform.translate(dx,dy);
+		return translate.call(ctx,dx,dy);
+	};
+	
+	var transform = ctx.transform;
+		ctx.transform = function(a,b,c,d,e,f){
+			var m2 = svg.createSVGMatrix();
+			m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
+			xform = xform.multiply(m2);
+			return transform.call(ctx,a,b,c,d,e,f);
+		};
+	var setTransform = ctx.setTransform;
+		ctx.setTransform = function(a,b,c,d,e,f){
+			xform.a = a;
+			xform.b = b;
+			xform.c = c;
+			xform.d = d;
+			xform.e = e;
+			xform.f = f;
+			return setTransform.call(ctx,a,b,c,d,e,f);
+		};
+	
+	var pt  = svg.createSVGPoint();
+	ctx.transformedPoint = function(x,y){
+		pt.x=x; pt.y=y;
+		return pt.matrixTransform(xform.inverse());
+	}
+
+}	
 
 
 
