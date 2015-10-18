@@ -90,6 +90,7 @@ redraw = function() {
 
 findFaces = function() {
 	
+	toggleLoading()
 	getFaceData = function(result) {
 		var data = result.result;
 		var current;
@@ -120,16 +121,25 @@ findFaces = function() {
 
 playSpook = function(coordinates) {
 	
-	if(!coordinates) {
-		dAlert("no face found");
-	}
-	panZoomPoint(coordinates[0], coordinates[1])
-
-	document.getElementById("reset").disabled = true;
-	document.getElementById("input").disabled = true;
-	document.getElementById("play").disabled = true;
-	document.getElementById("submit").disabled = true;
+	toggleLoading();
 	
+	var audio = document.getElementById("audio")
+	audio.play();
+	
+	
+	waitImg = document.getElementById("wait")
+	ctx.clearRect(0, 0, c.width, c.height);
+	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
+	
+	timer = setTimeout( function() {
+			panZoomPoint(coordinates[0], coordinates[1])
+
+			document.getElementById("reset").disabled = true;
+			document.getElementById("input").disabled = true;
+			document.getElementById("play").disabled = true;
+			document.getElementById("submit").disabled = true;
+	},3000)
+
 }
 
 // Zooms slowly to a point playing spooky music.
@@ -139,7 +149,6 @@ panZoomPoint = function(x,y,callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
 		
-		dAlert("done!");
 		
 		document.getElementById("reset").disabled = false;
 		document.getElementById("input").disabled = false;
@@ -156,9 +165,7 @@ panZoomPoint = function(x,y,callback) {
 		zoomPoint(x,y, scaleFactor);	
 	}, 100);
 	
-	
-	var audio = document.getElementById("audio")
-	audio.play();
+
 		
 }
 
@@ -229,11 +236,14 @@ reset = function() {
 }
 
 toggleLoading = function() {
-	
+
 	loading = document.getElementById("loading")
+	canvas = canvas = document.getElementById("imgC")
 	if(loading.style.visibility == "hidden") {
+		canvas = canvas.style.visibility = "hidden"
 		loading.style.visibility = "visible";
 	} else {
+		canvas = canvas.style.visibility = "visible"
 		loading.style.visibility = "hidden";
 	}
 	
