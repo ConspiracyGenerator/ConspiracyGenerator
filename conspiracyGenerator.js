@@ -5,10 +5,16 @@ dAlert = function(string) {
 	alert(string)
 }
 
+var c, ctx;
+
 window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
+	
+	c = document.getElementById("imgC");
+	ctx = c.getContext("2d");
+	
 }
 
 enableSubmit = function() {
@@ -37,7 +43,7 @@ processInput = function() {
     reader.onloadend = function () {
 		dAlert("done processing")
 		img.src = reader.result
-		
+		ctx.drawImage(img, 0, 0, c.width, c.height);
 	}
     reader.readAsDataURL(file);
 	
