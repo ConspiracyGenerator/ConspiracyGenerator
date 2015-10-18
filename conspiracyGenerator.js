@@ -15,10 +15,23 @@ enableSubmit = function() {
 
 processInput = function() {
 
+	// Get file
 	var file = document.getElementById("input").files[0];
-	console.log(document.getElementById("input").files);
-	console.log(file)
-	dAlert(file.name);
+	
+	// Create img
+	var img = document.createElement("img");
+    img.file = file;
+    //document.append(img); // Assuming that "preview" is the div output where the content will be displayed.
+    
+    var reader = new FileReader();
+    reader.onloadend = function () {
+		dAlert("done processing")
+		img.src = reader.result
+		
+	}
+    reader.readAsDataURL(file);
+	
+	dAlert("sending file")
 	
 }
 
