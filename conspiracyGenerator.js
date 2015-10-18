@@ -41,15 +41,28 @@ processInput = function() {
     
     var reader = new FileReader();
     reader.onloadend = function () {
-		dAlert("done processing")
-		img.src = reader.result
+		console.log("done processing")
+		img.src = reader.result;
 		ctx.drawImage(img, 0, 0, c.width, c.height);
+		ctx.clearRect(0, 0, c.width, c.height);
+		zoomPoint(450, 450, img);
+		ctx.drawImage(img, 0, 0, c.width, c.height);	
 	}
     reader.readAsDataURL(file);
 	
-	dAlert("sending file")
+	console.log("sending file")
 	
 }
+
+zoomPoint = function(x, y) {
+		
+	ctx.translate(-x, -y);
+	ctx.scale(2,2);
+		
+}
+
+
+
 
 
 
