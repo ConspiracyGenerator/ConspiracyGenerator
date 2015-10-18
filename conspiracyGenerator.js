@@ -11,6 +11,9 @@ window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
+	document.getElementById("play").onclick = (function() {
+		return panZoomPoint(400,250)
+	})
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
@@ -46,7 +49,6 @@ processInput = function() {
 		img.src = reader.result;
 		img.onload = function() {
 			redraw();
-			zoomPoint(400,250)
 		}
 	}
     reader.readAsDataURL(file);
@@ -62,8 +64,23 @@ redraw = function() {
 	
 }
 
-zoomPoint = function(x, y) {
-	scaleFactor = 1.1
+panZoomPoint = function(x,y) {
+	var scaleFactor = 1.05;
+	var endTimer = setTimeout(function() {
+		window.clearInterval(timer);
+		dAlert("done!");
+	}, 5000);
+	
+	var timer = setInterval(function() {
+		zoomPoint(x,y, scaleFactor);	
+	}, 100);
+	
+	var audio = document.getElementById("audio");
+	audio.play();
+		
+}
+
+zoomPoint = function(x, y, scaleFactor) {
 	var pt = ctx.transformedPoint(x,y)
 	ctx.translate(pt.x,pt.y)
 	ctx.scale(scaleFactor,scaleFactor)
@@ -71,6 +88,8 @@ zoomPoint = function(x, y) {
 	redraw();
 		
 }
+
+
 
 // Redefines some CTX functions and sets up an 
 // SVG matrix for zooming.
