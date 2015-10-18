@@ -65,18 +65,7 @@ function processInput() {
 				ctx.canvas.width = img.width
 				ctx.canvas.height = img.height
 				
-				while(img.height > c.height || img.width > c.width) {
-					
-					img.height -= img.height * 0.1
-					img.width -= img.width * 0.1
-					
-					c.height -= c.height * 0.1
-					c.width -= c.width * 0.1
-				
-				}
-				
-				
-				ctx.drawImage(img, 0, 0, c.width, c.height);
+				ctx.drawImage(img, 0, 0, img.width, img.height, 0,0,c.width, c.height);
 	
 
 				redraw();
@@ -197,7 +186,7 @@ function panZoomPoint(x, y, callback) {
 		// Draw illuminati
 		ilum = document.getElementById("ilum")
 
-		ctx.drawImage(ufo, x - r/2, y - r/2, r, r);
+		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
 		
@@ -289,13 +278,16 @@ function reset() {
 function toggleLoading() {
 
 	var loading = document.getElementById("loading");
+	var title = document.getElementById("title");
 	
 	if(loading.style.visibility == "hidden") {
 		c.style.visibility = "hidden"
 		loading.style.visibility = "visible";
+		title.innerHTML = "Conspiring"
 	} else {
 		c.style.visibility = "visible"
 		loading.style.visibility = "hidden";
+		title.innerHTML = "Conspiracy Generator"
 	}
 	
 }
