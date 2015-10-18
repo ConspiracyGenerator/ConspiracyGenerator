@@ -107,6 +107,7 @@ function findPoint() {
 			console.log(faces);
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
+
 			var change, fX, fY, fR;
 			
 			do {
@@ -124,7 +125,6 @@ function findPoint() {
 			} while (change);
 			
 			playSpook([rX, rY]); 
-				
 		}
 		
 		var input2 = [
@@ -149,9 +149,10 @@ function findPoint() {
 			   	
 }
 
-function playSpook(coordinates) {
+function playSpook(coordinates, randomed = false) {
 	
 	toggleLoading();
+	document.getElementById("play").disabled = true;
 	
 	var audio = document.getElementById("audio")
 	audio.play();
@@ -161,11 +162,10 @@ function playSpook(coordinates) {
 	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
 	
 	timer = setTimeout( function() {
-			panZoomPoint(coordinates[0], coordinates[1])
 
+			panZoomPoint(coordinates[0], coordinates[1])
 			document.getElementById("reset").disabled = true;
 			document.getElementById("input").disabled = true;
-			document.getElementById("play").disabled = true;
 			document.getElementById("submit").disabled = true;
 	},3000)
 
@@ -177,13 +177,14 @@ function panZoomPoint(x, y, callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
 		var r = 20; //magic constant; deal with it
+
 		// Draw circle
 		drawCircle(x,y,r);
 
 		// Draw illuminati
-		ilum = document.getElementById("ilum");
+		ilum = document.getElementById("ilum")
 
-		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
+		ctx.drawImage(ufo, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
 		
@@ -200,9 +201,6 @@ function panZoomPoint(x, y, callback) {
 		
 		title.innerHTML = phrase
 		
-		if(callback) {
-			callback()	
-		}
 		
 	}, 5000 * scaleFactor);
 	
