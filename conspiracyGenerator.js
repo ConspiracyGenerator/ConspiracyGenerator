@@ -185,55 +185,15 @@ function panZoomPoint(x,y,width,callback) {
 		var r = width * .2
 		
 		// Draw circle
-		//drawCircle(x,y,r);
+		drawCircle(x,y,r);
 		
 		// Draw illuminati
 		ilum = document.getElementById("ilum");
-		
-		//dAlert("begin sampling")
-		// Just screwing around 
 
-		//Get color data at point to disguise illuminati
-		var colorSample = ctx.getImageData(x,y,1,1);
-		console.log(colorSample)
-		var tempC = document.createElement("canvas");
-		var tempCTX = tempC.getContext("2d");
 		imgWidth = ilum.width;
 		imgHeight = ilum.height;
-		
-		tempC.width = imgWidth;
-		tempC.height = imgHeight;
-		dAlert(imgWidth);
-		//tempC.style.display = "block"
-		
-		tempCTX.drawImage(ilum,0,0);
-		var imgData = tempCTX.getImageData(0,0,imgWidth-1, imgHeight-1);
-		for(var j = 0; j < imgData.height; j++) {
-			
-			for(var i = 0; i < imgData.length; i++) {
-				var index=(i*4)*imgData.width+(j*4);
-				var red=imgData.data[index];
-				var green=imgData.data[index+1];
-				var blue=imgData.data[index+2];
-				var alpha=imgData.data[index+3];
-				var average=(red+green+blue)/3;
-					imgData.data[index]=average;
-				imgData.data[index+1]=average;
-				imgData.data[index+2]=average;
-				imgData.data[index+3]=alpha;
-						
-			}
-		}
-		tempCTX.clearRect(0,0, tempC.width, tempC.height)
-		tempCTX.putImageData(imgData,tempC.width,tempC.height)
-		document.body.appendChild(tempC)
-		/*
-		newIlum = document.createElement("img")
-		newIlum.src = tempC.toDataURL()
-		console.log(newIlum.src)
-		newIlum.onload = function() {
-			ctx.drawImage(newIlum, x - r/2, y - r/2, r, r);
-		}
+
+		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
 		
@@ -248,9 +208,8 @@ function panZoomPoint(x,y,width,callback) {
 		random = Math.floor(Math.random() * 7)
 		phrase = phrases[random]
 		
-		
 		title.innerHTML = phrase
-		*/
+		
 		if(callback) {
 			callback()	
 		}
@@ -261,7 +220,6 @@ function panZoomPoint(x,y,width,callback) {
 		zoomPoint(x,y, scaleFactor);	
 	}, 100);
 	
-
 		
 }
 
