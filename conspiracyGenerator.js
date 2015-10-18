@@ -37,7 +37,7 @@ processInput = function() {
 	// Create img
 	var img = document.createElement("img");
     img.file = file;
-    //document.append(img); // Assuming that "preview" is the div output where the content will be displayed.
+    //document.append(img); // 
     
     var reader = new FileReader();
     reader.onloadend = function () {
