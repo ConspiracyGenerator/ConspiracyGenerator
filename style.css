@@ -16,6 +16,10 @@
 
 }
 
+#ilum {
+	display: none;
+}
+
 #loading {
 	
 	visibility: hidden;

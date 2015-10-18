@@ -95,18 +95,36 @@ findFaces = function() {
 		var data = result.result;
 		var current;
 		var smallest;
-		console.log(data);
-		smallest = [data[0].x, data[0].y, data[0].width] || null;
+		if (data.length == 0) {
+			smallest = null; 
+		}
+		else {
+			smallest = [data[0].x, data[0].y, data[0].width];
+		}
+		
 		for (var i = 1; i < data.length; i++) {
 			current = data[i];
-			console.log(current.width);
 			if (current.width < smallest.width) { //always squares
 				smallest = [current.x, current.y, data[0].width];
 			}
 		}
-		playSpook([(2 * smallest[0] + smallest[2])/2,
-				 (2 * smallest[1] + smallest[2])/2,
-				 smallest[2]]);
+		
+		if (smallest) {
+			console.log("smallest existed");
+			playSpook([(2 * smallest[0] + smallest[2])/2,
+					 (2 * smallest[1] + smallest[2])/2,
+					  smallest[2]]);
+		}
+		else {
+			console.log("randomed");
+			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
+			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
+			
+			ilum = document.getElementById("ilum");
+			ctx.drawImage(ilum, rX, rY, 100, 100);
+			playSpook([rX, rY, 100]);
+
+		}
 	}
 	
 	var input = [
@@ -187,15 +205,15 @@ setUpZoom = function() {
 	
 	var scale = ctx.scale;
 	ctx.scale = function(sx,sy){
-		xform = xform.scaleNonUniform(sx,sy);
-		return scale.call(ctx,sx,sy);
-	}
+			xform = xform.scaleNonUniform(sx,sy);
+			return scale.call(ctx,sx,sy);
+		}
 
 	var translate = ctx.translate;
 	ctx.translate = function(dx,dy){
-		xform = xform.translate(dx,dy);
-		return translate.call(ctx,dx,dy);
-	};
+			xform = xform.translate(dx,dy);
+			return translate.call(ctx,dx,dy);
+		};
 	
 	var transform = ctx.transform;
 		ctx.transform = function(a,b,c,d,e,f){
@@ -204,6 +222,7 @@ setUpZoom = function() {
 			xform = xform.multiply(m2);
 			return transform.call(ctx,a,b,c,d,e,f);
 		};
+		
 	var setTransform = ctx.setTransform;
 		ctx.setTransform = function(a,b,c,d,e,f){
 			xform.a = a;
@@ -217,9 +236,9 @@ setUpZoom = function() {
 	
 	var pt  = svg.createSVGPoint();
 	ctx.transformedPoint = function(x,y){
-		pt.x=x; pt.y=y;
-		return pt.matrixTransform(xform.inverse());
-	}
+			pt.x=x; pt.y=y;
+			return pt.matrixTransform(xform.inverse());
+		}
 
 }	
 
