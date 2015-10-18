@@ -17,11 +17,9 @@ window.onload = function() {
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
 
-	document.getElementById("play").onclick = findFaces;
+	document.getElementById("play").onclick = findPoint;
 	document.getElementById("reset").onclick = reset;
 
-
-	//document.getElementById("find").onclick = findTriangle;
 	document.getElementById("loading").style.visibility = "hidden";
 	
 	c = document.getElementById("imgC");
@@ -31,20 +29,6 @@ window.onload = function() {
 	
 }
 
-
-function findTriangle() {
-	var input = [
-		"data://my/Triangles/needle.png",
-		c.toDataURL()
-	]
-	Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
-           .algo("algo://orzikhd/FindObjectInImage/0.1.0")
-           .pipe(input)
-           .then(function (result) {
-			   console.log("Is Found?", result.result.found);
-		   });
-	
-}
 
 function enableSubmit() {
 	document.getElementById("submit").disabled = false;
@@ -102,50 +86,67 @@ function redraw() {
 	
 }
 
-function findFaces() {
+function findPoint() {
 	
 	toggleLoading()
-	function getFaceData(result) {
-		var data = result.result;
-		var current;
-		var smallest;
-		if (data.length == 0) {
-			smallest = null; 
-		}
-		else {
-			smallest = [data[0].x, data[0].y, data[0].width];
-		}
+
+
+	function getTriangleData(result) {	
 		
-		for (var i = 1; i < data.length; i++) {
-			current = data[i];
-			if (current.width < smallest.width) { //always squares
-				smallest = [current.x, current.y, data[0].width];
+		var triangles = result;
+		console.log(triangles);
+		
+		function getFaceData(result) {
+			var data = result.result;
+			console.log(data);
+			var faces = [];
+			for (var i = 0; i < data.length; i++) {
+				faces.push([data[i].x, data[i].y, data[i].width / 2]);
+				//x, y, radius
 			}
-		}
-		
-		if (smallest) {
-			console.log("smallest existed");
-			playSpook([(2 * smallest[0] + smallest[2])/2,
-					 (2 * smallest[1] + smallest[2])/2,
-					  smallest[2]]);
-		}
-		else {
-			console.log("randomed");
+			console.log(faces);
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
-
-			playSpook([rX, rY, 100]); 
+			var change, fX, fY, fR;
+			
+			do {
+				console.log("ran");
+				change = false;
+				for (var i = 0; i < faces.length; i++) {
+					fX = faces[i][0]; 
+					fY = faces[i][1]; 
+					fR = faces[i][2];
+					if (((rX > (fX - fR)) && (rX < (fX + fR))) 
+					 || ((rY > (fY - fR)) && (rY < (fY + fR)))) {
+						 change = true;
+					 }
+				}
+			} while (change);
+			
+			playSpook([rX, rY]); 
+				
 		}
+		
+		var input2 = [
+			c.toDataURL()
+		]
+
+		Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
+				   .algo("algo://opencv/FaceDetectionBox/0.1.x")
+				   .pipe(input2)
+				   .then(getFaceData);			
 	}
 	
-	var input = [
-		c.toDataURL()
+	var input1 = [
+		c.toDataURL(),
+		3 //triangles
 	]
 	
 	Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
-           .algo("algo://opencv/FaceDetectionBox/0.1.x")
-           .pipe(input)
-           .then(getFaceData);	
+			   .algo("algo://opencv/FindPolygonsInImage/0.1.2")
+			   .pipe(input1)
+			   .then(getTriangleData);
+			   	
 }
 
 function playSpook(coordinates) {
@@ -160,7 +161,7 @@ function playSpook(coordinates) {
 	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
 	
 	timer = setTimeout( function() {
-			panZoomPoint(coordinates[0], coordinates[1],coordinates[2])
+			panZoomPoint(coordinates[0], coordinates[1])
 
 			document.getElementById("reset").disabled = true;
 			document.getElementById("input").disabled = true;
@@ -172,10 +173,10 @@ function playSpook(coordinates) {
 
 // Zooms slowly to a point playing spooky music.
 // Optional callback
-function panZoomPoint(x,y,width,callback) {
+function panZoomPoint(x, y, callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
-		var r = width * .2;
+		var r = 20; //magic constant; deal with it
 		// Draw circle
 		drawCircle(x,y,r);
 
