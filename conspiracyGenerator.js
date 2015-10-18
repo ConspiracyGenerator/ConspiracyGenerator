@@ -1,3 +1,8 @@
+// Debug alert function
+dAlert = function(string) {
+	alert(string)
+}
+
 window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
@@ -9,5 +14,13 @@ enableSubmit = function() {
 }
 
 processInput = function() {
-	alert("hello world");
+
+	var file = document.getElementById("input").files[0];
+	console.log(document.getElementById("input").files);
+	console.log(file)
+	dAlert(file.name);
+	
 }
+
+
+
