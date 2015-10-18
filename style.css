@@ -10,10 +10,17 @@
 
 }
 
-#loading {
+#wait {
 
-	margin-bottom: -400px;
+	display: none;
+
+}
+
+#loading {
+	
 	visibility: hidden;
+	margin-bottom: -400px;
+	z-index: 10000;
 
 }
 
