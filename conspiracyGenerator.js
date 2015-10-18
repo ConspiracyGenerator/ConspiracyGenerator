@@ -47,39 +47,37 @@ enableSubmit = function() {
 }
 
 processInput = function() {
-
+	
 	// Get file
 	var file = document.getElementById("input").files[0];
-	var imageReg = /\.(jpg|jpeg|png|gif|bmp)$/;
+	var imageReg = /\.(JPG|JPEG|PNG|GIF|BMP|jpg|jpeg|png|gif|bmp)$/;
 	if (imageReg.test(file.name)) {
-		console.log("valid");
-	}
-	else { console.log("invalid"); }
-	
-	
-	// Create img
-	img = document.createElement("img");
-    img.file = file;
-    //document.append(img); // 
-    
-    var reader = new FileReader();
-    reader.onloadend = function () {
-		console.log("done processing");
-		img.src = reader.result;
-		img.onload = function() {
-			
-			ctx.drawImage(img, 0, 0, c.width, c.height);
-			
-			document.getElementById("find").disabled = false;
 
-			redraw();
+		// Create img
+		img = document.createElement("img");
+		img.file = file;
+		//document.append(img); // 
+		
+		var reader = new FileReader();
+		reader.onloadend = function () {
+			console.log("done processing");
+			img.src = reader.result;
+			img.onload = function() {
+				
+				ctx.drawImage(img, 0, 0, c.width, c.height);
+				
+				document.getElementById("find").disabled = false;
+
+				redraw();
+			}
 		}
+		reader.readAsDataURL(file);
+		console.log("sending file");
+		
+		document.getElementById("submit").disabled = true;
+		
 	}
-    reader.readAsDataURL(file);
-	console.log("sending file");
-	
-	document.getElementById("submit").disabled = true;
-	
+	else { dAlert("ERROR: INVALID IMAGE EXTENSION"); }
 	
 }
 
@@ -100,7 +98,7 @@ findFaces = function() {
 		smallest = [data[0].x, data[0].y, data[0].width] || null;
 		for (var i = 1; i < data.length; i++) {
 			current = data[i];
-			console.log(current.x, current.y, current.width, current.height);
+			console.log(current.width);
 			if (current.width < smallest.width) { //always squares
 				smallest = [current.x, current.y, data[0].width];
 			}
@@ -122,7 +120,9 @@ findFaces = function() {
 
 playSpook = function(coordinates) {
 	
-
+	if(!coordinates) {
+		dAlert("no face found");
+	}
 	panZoomPoint(coordinates[0], coordinates[1])
 
 	document.getElementById("reset").disabled = true;
