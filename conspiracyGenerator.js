@@ -95,38 +95,64 @@ function findPoint() {
 
 	function getTriangleData(result) {	
 		
-		var triangles = result;
-		console.log(triangles);
+		var raw = result.result.found;
+		var triangles = [];
+		for (var i = 0; i < raw.length; i++) {
+			triangles.push([raw[i].center.x, raw[i].center.y]);
+		}
+		console.log("triangles", triangles);
 		
 		function getFaceData(result) {
 			var data = result.result;
-			console.log(data);
 			var faces = [];
 			for (var i = 0; i < data.length; i++) {
 				faces.push([data[i].x, data[i].y, data[i].width / 2]);
 				//x, y, radius
 			}
-			console.log(faces);
+			console.log("faces", faces);
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
-
-			var change, fX, fY, fR;
+			var noTriangles = true;
+			var change, fX, fY, fR, tX, tY;
 			
-			do {
-				console.log("ran");
-				change = false;
-				for (var i = 0; i < faces.length; i++) {
-					fX = faces[i][0]; 
-					fY = faces[i][1]; 
-					fR = faces[i][2];
-					if (((rX > (fX - fR)) && (rX < (fX + fR))) 
-					 || ((rY > (fY - fR)) && (rY < (fY + fR)))) {
-						 change = true;
-					 }
+			for (var i = 0; i < triangles.length; i++) {
+				for (var j = 0; j < faces.length; i++) {
+					tX = triangles[i][0];
+					tY = triangles[i][1];
+					fX = faces[j][0]; 
+					fY = faces[j][1]; 
+					fR = faces[j][2];						
+						
+					if (((tX < (fX - fR)) || (tX > (fX + fR))) 
+					 && ((tY < (fY - fR)) || (tY > (fY + fR)))) {
+						rX = tX;
+						rY = tY;
+						console.log("using triangle", rX, rY);
+						noTriangles = false;
+						break;
+					}		
 				}
-			} while (change);
+			}
 			
-			playSpook([rX, rY]); 
+			if (noTriangles) {
+				do {
+					console.log("ran");
+					change = false;
+					for (var i = 0; i < faces.length; i++) {
+						fX = faces[i][0]; 
+						fY = faces[i][1]; 
+						fR = faces[i][2];
+						if (((rX > (fX - fR)) && (rX < (fX + fR))) 
+						 || ((rY > (fY - fR)) && (rY < (fY + fR)))) {
+							 change = true;
+						 }
+					}
+				} while (change);
+				console.log("final", [rX, rY]);
+				 
+			}
+			playSpook([rX, rY]);
+			
 		}
 		
 		var input2 = [
@@ -151,7 +177,7 @@ function findPoint() {
 			   	
 }
 
-function playSpook(coordinates, randomed = false) {
+function playSpook(coordinates) {
 	
 	toggleLoading();
 	document.getElementById("play").disabled = true;
@@ -185,8 +211,17 @@ function panZoomPoint(x, y, callback) {
 
 		// Draw illuminati
 		ilum = document.getElementById("ilum")
-
+		/*
+		for (var i = 0.0; i < 1.0; i+= .00005) {
+			setTimeout(function() {
+				ilum.style.opacity = i.toString();
+				console.log("beep");
+				ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
+			}, 1000);
+		}
+		*/
 		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
+		
 		
 		document.getElementById("reset").disabled = false;
 		
