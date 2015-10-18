@@ -1,8 +1,16 @@
-// This the CSS file for ConspiracyGenerator
+body {
 
+}
 
 h {
 
-	color: red;
+	display: block;
 
+
+}
+
+canvas {
+
+	border: 5px solid #000000;
+	
 }
