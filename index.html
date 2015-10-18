@@ -8,21 +8,27 @@
 	</head>
 
 	<body>	
-		<h1> Conspiracy Generator </h1>
+	
+		<div id = "wrapper">
+			<h1> Conspiracy Generator </h1>
+			
+			<div id = "cWrapper">
+				<img id="loading" src="images/loading.gif"></img>
+				<canvas id="imgC" width="600" height="600"> </canvas>
+			</div>
+			
+			<br />
+			<input id="input" type="file" name="pic" accept="image/*">
+			<button id="submit" disabled="disabled">Submit your image</button>
+
+			<button id="play">Play Evidence</button>
+			<button id="reset">Generate another Conspiracy!</button>
+			
+			<audio id="audio" src="audio/xfiles.mp3" preload="auto"> Your browser Does not support the HTML5 audio </audio>
+
+			<button id="find" disabled="disabled">Find Triangle</button>
+		</div>
 		
-		<canvas id="imgC" width="600" height="600"></canvas>
-
-		<br />
-		<input id="input" type="file" name="pic" accept="image/*">
-		<button id="submit" disabled="disabled">Submit</button>
-
-		<button id="play">Play</button>
-		<button id="reset">Generate another Conspiracy!</button>
-		
-		<audio id="audio" src="audio/xfiles.mp3" preload="auto"> Your browser Does not support the HTML5 audio </audio>
-
-		<button id="find" disabled="disabled">Find Triangle</button>
-
 	</body>
 	
 	

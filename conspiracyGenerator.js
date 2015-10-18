@@ -18,7 +18,7 @@ window.onload = function() {
 
 
 	document.getElementById("find").onclick = findTriangle;
-
+	document.getElementById("loading").style.visibility = "hidden";
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
@@ -56,8 +56,6 @@ processInput = function() {
 	}
 	else { console.log("invalid"); }
 	
-	console.log(document.getElementById("input").files);
-	console.log(file)
 	
 	// Create img
 	img = document.createElement("img");
@@ -78,8 +76,10 @@ processInput = function() {
 		}
 	}
     reader.readAsDataURL(file);
+	console.log("sending file");
 	
-	console.log("sending file")
+	document.getElementById("submit").disabled = true;
+	
 	
 }
 
@@ -91,7 +91,7 @@ redraw = function() {
 }
 
 playSpook = function() {
-	
+
 	panZoomPoint(400,250)
 	document.getElementById("reset").disabled = true;
 	document.getElementById("input").disabled = true;
@@ -114,7 +114,7 @@ panZoomPoint = function(x,y,callback) {
 		document.getElementById("reset").disabled = false;
 		document.getElementById("input").disabled = false;
 		document.getElementById("play").disabled = false;
-		document.getElementById("submit").disabled = false;
+
 		
 		if(callback) {
 			callback()	
@@ -142,7 +142,7 @@ zoomPoint = function(x, y, scaleFactor) {
 		
 }
 
-// Redefines some CTX functions and sets up an 
+// Redefines some CTX functions, sets up an 
 // SVG matrix for zooming.
 setUpZoom = function() {
 	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
@@ -191,10 +191,23 @@ reset = function() {
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.restore();
 	ctx.save();
+	document.getElementById("submit").disabled = false;
 	var audio = document.getElementById("audio")
 	audio.pause();
 	audio.load();
 		
+}
+
+toggleLoading = function() {
+	
+	loading = document.getElementById("loading")
+	if(loading.style.visibility == "hidden") {
+		loading.style.visibility = "visible";
+	} else {
+		loading.style.visibility = "hidden";
+	}
+	
+	
 }
 
 

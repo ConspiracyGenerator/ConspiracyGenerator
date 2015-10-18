@@ -1,18 +1,42 @@
-body {
+#wrapper {
 
-	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 600px;
+	background-color: black;
+	border-radius: 0px 0px 10px 10px;
+	box-shadow: 10px 10px 5px #888888;
+	overflow: hidden;
 
 }
 
-h {
+#loading {
 
-	display: block;
+	margin-bottom: -400px;
+	visibility: hidden;
 
+}
+
+body {
+
+	text-align: center;
+	background-color: #ececec;
+	background-image: url("images/background.jpg");
+	color: white;
+
+}
+
+h1 {
+
+	font-family: Arial Black,Arial Bold,Gadget,sans-serif;
+	font-size: 40px;
 
 }
 
 canvas {
 
-	border: 5px solid #000000;
+	border: 5px solid white;
+	border-radius: 10px;
+	width: 90%;
 	
 }
