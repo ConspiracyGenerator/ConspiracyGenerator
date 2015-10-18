@@ -1,7 +1,7 @@
 //ask about checking the true file type
 
 // Debug alert function
-dAlert = function(string) {
+function dAlert(string) {
 	alert(string)
 }
 
@@ -28,7 +28,7 @@ window.onload = function() {
 }
 
 
-findTriangle = function() {
+function findTriangle() {
 	var input = [
 		"data://my/Triangles/needle.png",
 		c.toDataURL()
@@ -42,11 +42,11 @@ findTriangle = function() {
 	
 }
 
-enableSubmit = function() {
+function enableSubmit() {
 	document.getElementById("submit").disabled = false;
 }
 
-processInput = function() {
+function processInput() {
 	
 	// Get file
 	var file = document.getElementById("input").files[0];
@@ -88,16 +88,16 @@ processInput = function() {
 }
 
 // Clears and redraws the canvas
-redraw = function() {
+function redraw() {
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.drawImage(img, 0, 0, c.width, c.height);
 	
 }
 
-findFaces = function() {
+function findFaces() {
 	
 	toggleLoading()
-	getFaceData = function(result) {
+	function getFaceData(result) {
 		var data = result.result;
 		var current;
 		var smallest;
@@ -125,11 +125,8 @@ findFaces = function() {
 			console.log("randomed");
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
-			
-			ilum = document.getElementById("ilum");
-			ctx.drawImage(ilum, rX, rY, 100, 100);
-			playSpook([rX, rY, 100]);
 
+			playSpook([rX, rY, 100]); 
 		}
 	}
 	
@@ -143,7 +140,7 @@ findFaces = function() {
            .then(getFaceData);	
 }
 
-playSpook = function(coordinates) {
+function playSpook(coordinates) {
 	
 	toggleLoading();
 	
@@ -168,12 +165,15 @@ playSpook = function(coordinates) {
 
 // Zooms slowly to a point playing spooky music.
 // Optional callback
-panZoomPoint = function(x,y,width,callback) {
+function panZoomPoint(x,y,width,callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
-		
+		var r = width * .2
 		// Draw circle
-		drawCircle(x,y,width*.2)
+		drawCircle(x,y,r);
+		// Draw illuminati
+		ilum = document.getElementById("ilum");
+		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
 		
@@ -199,19 +199,20 @@ panZoomPoint = function(x,y,width,callback) {
 		
 }
 
-zoomPoint = function(x, y, scaleFactor) {
+function zoomPoint(x, y, scaleFactor) {
 	
-	var pt = ctx.transformedPoint(x,y)
-	ctx.translate(pt.x,pt.y)
-	ctx.scale(scaleFactor,scaleFactor)
-	ctx.translate(-pt.x,-pt.y)
+	var pt = ctx.transformedPoint(x,y);
+	ctx.translate(pt.x,pt.y);
+	ctx.scale(scaleFactor,scaleFactor);
+	ctx.translate(-pt.x,-pt.y);
+	
 	redraw();
 		
 }
 
 // Redefines some CTX functions, sets up an 
 // SVG matrix for zooming.
-setUpZoom = function() {
+function setUpZoom() {
 	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
 	xform = svg.createSVGMatrix()
 	
@@ -254,30 +255,28 @@ setUpZoom = function() {
 
 }	
 
-reset = function() {
-	
+function reset() {
 	
 	location.reload()
 
 }
 
-toggleLoading = function() {
+function toggleLoading() {
 
-	loading = document.getElementById("loading")
-	canvas = canvas = document.getElementById("imgC")
+	var loading = document.getElementById("loading");
+	
 	if(loading.style.visibility == "hidden") {
-		canvas = canvas.style.visibility = "hidden"
+		c.style.visibility = "hidden"
 		loading.style.visibility = "visible";
 	} else {
-		canvas = canvas.style.visibility = "visible"
+		c.style.visibility = "visible"
 		loading.style.visibility = "hidden";
 	}
-	
 	
 }
 
 // Draw a circle on the ctx with the given radius and center.
-drawCircle = function(x,y,r) {
+function drawCircle(x,y,r) {
 	var centerX = x;
     var centerY = y;
     var radius = r;
