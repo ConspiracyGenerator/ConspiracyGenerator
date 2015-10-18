@@ -69,7 +69,7 @@ function processInput() {
 			img.onload = function() {
 				
 				scaleFactor = 1.01 + 0.002 * img.width/100
-				dAlert(scaleFactor)
+				//dAlert(scaleFactor)
 				if(scaleFactor <= 1) {
 					scaleFactor = 1.01
 				} 
@@ -175,11 +175,17 @@ function playSpook(coordinates) {
 function panZoomPoint(x,y,width,callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
-		var r = width * .2
+		var r = width * .2;
 		// Draw circle
 		drawCircle(x,y,r);
 		// Draw illuminati
+		/*
 		ilum = document.getElementById("ilum");
+		ilum.display = "inline";
+		ilum.position = "absolute";
+		ilum.left = (x - r/2) + "px";
+		ilum.bottom = (y - r/2) + "px";
+		*/
 		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;

@@ -18,6 +18,7 @@
 
 #ilum {
 	display: none;
+	z-index: 5;
 }
 
 #loading {
