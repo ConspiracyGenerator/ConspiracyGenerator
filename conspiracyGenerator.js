@@ -6,7 +6,7 @@ dAlert = function(string) {
 }
 
 // Globals
-var c, ctx, img
+var c, ctx, img, scaleFactor
 
 window.onload = function() {
 	//alert("hello world");
@@ -17,7 +17,7 @@ window.onload = function() {
 	document.getElementById("reset").onclick = reset;
 
 
-	document.getElementById("find").onclick = findTriangle;
+	//document.getElementById("find").onclick = findTriangle;
 	document.getElementById("loading").style.visibility = "hidden";
 	
 	c = document.getElementById("imgC");
@@ -64,9 +64,15 @@ processInput = function() {
 			img.src = reader.result;
 			img.onload = function() {
 				
+				scaleFactor = 1.01 + 0.002 * img.width/100
+				if(scaleFactor <= 1) {
+					scaleFactor = 1.01
+				}
+
+				
 				ctx.drawImage(img, 0, 0, c.width, c.height);
 				
-				document.getElementById("find").disabled = false;
+				//document.getElementById("find").disabled = false;
 
 				redraw();
 			}
@@ -150,7 +156,7 @@ playSpook = function(coordinates) {
 	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
 	
 	timer = setTimeout( function() {
-			panZoomPoint(coordinates[0], coordinates[1])
+			panZoomPoint(coordinates[0], coordinates[1],coordinates[2])
 
 			document.getElementById("reset").disabled = true;
 			document.getElementById("input").disabled = true;
@@ -162,22 +168,28 @@ playSpook = function(coordinates) {
 
 // Zooms slowly to a point playing spooky music.
 // Optional callback
-panZoomPoint = function(x,y,callback) {
-	var scaleFactor = 1.04;
+panZoomPoint = function(x,y,width,callback) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
 		
+		// Draw circle
+		drawCircle(x,y,width*.2)
 		
 		document.getElementById("reset").disabled = false;
+		
 		document.getElementById("input").disabled = false;
 		document.getElementById("play").disabled = false;
+		document.getElementById("submit").disabled = false;
+		document.getElementById("input").style.display = "none";
+		document.getElementById("play").style.display = "none";
+		document.getElementById("submit").style.display = "none";
 
 		
 		if(callback) {
 			callback()	
 		}
 		
-	}, 5000);
+	}, 5000 * scaleFactor);
 	
 	var timer = setInterval(function() {
 		zoomPoint(x,y, scaleFactor);	
@@ -244,14 +256,9 @@ setUpZoom = function() {
 
 reset = function() {
 	
-	ctx.clearRect(0, 0, c.width, c.height);
-	ctx.restore();
-	ctx.save();
-	document.getElementById("submit").disabled = false;
-	var audio = document.getElementById("audio")
-	audio.pause();
-	audio.load();
-		
+	
+	location.reload()
+
 }
 
 toggleLoading = function() {
@@ -269,7 +276,20 @@ toggleLoading = function() {
 	
 }
 
+// Draw a circle on the ctx with the given radius and center.
+drawCircle = function(x,y,r) {
+	var centerX = x;
+    var centerY = y;
+    var radius = r;
+	
+	ctx.beginPath();
+	ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 
+	ctx.lineWidth = 2 * scaleFactor;
+	ctx.strokeStyle = 'red';
+	ctx.stroke();
+
+}
 
 
 
