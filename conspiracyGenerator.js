@@ -12,16 +12,34 @@ window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
+
 	document.getElementById("play").onclick = (function() {
 		return panZoomPoint(400,250)
 	})
 	document.getElementById("reset").onclick = reset
+
+
+	document.getElementById("find").onclick = findTriangle;
 
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
 	ctx.save();
 	setUpZoom()
+	
+}
+
+findTriangle = function() {
+	var input = [
+		"data://my/Triangles/needle.png",
+		c.toDataURL()
+	]
+	Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
+           .algo("algo://orzikhd/FindObjectInImage/0.1.0")
+           .pipe(input)
+           .then(function (result) {
+			   console.log("Is Found?", result.result.found);
+		   });
 	
 }
 
@@ -49,9 +67,14 @@ processInput = function() {
     
     var reader = new FileReader();
     reader.onloadend = function () {
-		console.log("done processing")
+		console.log("done processing");
 		img.src = reader.result;
 		img.onload = function() {
+			
+			ctx.drawImage(img, 0, 0, c.width, c.height);
+			
+			document.getElementById("find").disabled = false;
+
 			redraw();
 		}
 	}
