@@ -13,8 +13,8 @@ window.onload = function() {
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
 
-	document.getElementById("play").onclick = playSpook
-	document.getElementById("reset").onclick = reset
+	document.getElementById("play").onclick = findFaces;
+	document.getElementById("reset").onclick = reset;
 
 
 	document.getElementById("find").onclick = findTriangle;
@@ -90,22 +90,51 @@ redraw = function() {
 	
 }
 
-playSpook = function() {
+findFaces = function() {
 	
-	panZoomPoint(400,250)
+	getFaceData = function(result) {
+		var data = result.result;
+		var current;
+		var smallest;
+		console.log(data);
+		smallest = [data[0].x, data[0].y, data[0].width] || null;
+		for (var i = 1; i < data.length; i++) {
+			current = data[i];
+			console.log(current.x, current.y, current.width, current.height);
+			if (current.width < smallest.width) { //always squares
+				smallest = [current.x, current.y, data[0].width];
+			}
+		}
+		playSpook([(2 * smallest[0] + smallest[2])/2,
+				 (2 * smallest[1] + smallest[2])/2,
+				 smallest[2]]);
+	}
+	
+	var input = [
+		c.toDataURL()
+	]
+	
+	Algorithmia.client("simdB8OkkCxJQv3HLgp4Z7pRfaM1")
+           .algo("algo://opencv/FaceDetectionBox/0.1.x")
+           .pipe(input)
+           .then(getFaceData);	
+}
+
+playSpook = function(coordinates) {
+	
+	//panZoomPoint(200, 200)
+	panZoomPoint(coordinates[0], coordinates[1])
 	document.getElementById("reset").disabled = true;
 	document.getElementById("input").disabled = true;
 	document.getElementById("play").disabled = true;
 	document.getElementById("submit").disabled = true;
-
-
 	
 }
 
 // Zooms slowly to a point playing spooky music.
 // Optional callback
 panZoomPoint = function(x,y,callback) {
-	var scaleFactor = 1.05;
+	var scaleFactor = 1.04;
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
 		
