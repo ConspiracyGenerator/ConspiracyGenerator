@@ -178,14 +178,10 @@ function panZoomPoint(x,y,width,callback) {
 		var r = width * .2;
 		// Draw circle
 		drawCircle(x,y,r);
+
 		// Draw illuminati
-		/*
 		ilum = document.getElementById("ilum");
-		ilum.display = "inline";
-		ilum.position = "absolute";
-		ilum.left = (x - r/2) + "px";
-		ilum.bottom = (y - r/2) + "px";
-		*/
+
 		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
@@ -201,7 +197,6 @@ function panZoomPoint(x,y,width,callback) {
 		random = Math.floor(Math.random() * 7)
 		phrase = phrases[random]
 		
-		
 		title.innerHTML = phrase
 		
 		if(callback) {
@@ -214,7 +209,6 @@ function panZoomPoint(x,y,width,callback) {
 		zoomPoint(x,y, scaleFactor);	
 	}, 100);
 	
-
 		
 }
 
