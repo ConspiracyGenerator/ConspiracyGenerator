@@ -8,6 +8,10 @@ dAlert = function(string) {
 // Globals
 var c, ctx, img, scaleFactor
 
+// Random phrases
+var phrases = ["Can't explain that, science!", "Lizard man spotted.", "Aliens?", "Illuminati Confirmed.",
+"Wake up sheepul!", "Lizard woman spotted.", "Coincidence?"]
+
 window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
@@ -65,8 +69,12 @@ processInput = function() {
 			img.onload = function() {
 				
 				scaleFactor = 1.01 + 0.002 * img.width/100
+				dAlert(scaleFactor)
 				if(scaleFactor <= 1) {
 					scaleFactor = 1.01
+				} 
+				if(scaleFactor > 1.04) {
+					scaleFactor = 1.04
 				}
 
 				
@@ -126,9 +134,9 @@ findFaces = function() {
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
 			
-			ilum = document.getElementById("ilum");
-			ctx.drawImage(ilum, rX, rY, 100, 100);
+
 			playSpook([rX, rY, 100]);
+		
 
 		}
 	}
@@ -149,8 +157,7 @@ playSpook = function(coordinates) {
 	
 	var audio = document.getElementById("audio")
 	audio.play();
-	
-	
+
 	waitImg = document.getElementById("wait")
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
@@ -184,6 +191,12 @@ panZoomPoint = function(x,y,width,callback) {
 		document.getElementById("play").style.display = "none";
 		document.getElementById("submit").style.display = "none";
 
+		title = document.getElementById("title")
+		random = Math.floor(Math.random() * 7)
+		phrase = phrases[random]
+		
+		
+		title.innerHTML = phrase
 		
 		if(callback) {
 			callback()	
@@ -280,7 +293,8 @@ toggleLoading = function() {
 drawCircle = function(x,y,r) {
 	var centerX = x;
     var centerY = y;
-    var radius = r;
+    var radius = r
+	
 	
 	ctx.beginPath();
 	ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -290,6 +304,9 @@ drawCircle = function(x,y,r) {
 	ctx.stroke();
 
 }
+
+	
+
 
 
 
