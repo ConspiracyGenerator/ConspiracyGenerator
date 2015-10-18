@@ -134,7 +134,7 @@ function findFaces() {
 			var rX = Math.floor(Math.random()*(c.width - c.width * 0.25) + c.width * 0.2);
 			var rY = Math.floor(Math.random()*(c.height - c.height * 0.25) + c.height * 0.2);
 
-			playSpook([rX, rY, 100]); 
+			playSpook([rX, rY, 100], true); 
 		}
 	}
 	
@@ -148,7 +148,7 @@ function findFaces() {
            .then(getFaceData);	
 }
 
-function playSpook(coordinates) {
+function playSpook(coordinates, randomed = false) {
 	
 	toggleLoading();
 	document.getElementById("play").disabled = true;
@@ -162,7 +162,8 @@ function playSpook(coordinates) {
 	
 	timer = setTimeout( function() {
 			
-			panZoomPoint(coordinates[0], coordinates[1],coordinates[2])
+			
+			panZoomPoint(coordinates[0], coordinates[1],coordinates[2], randomed)
 
 			document.getElementById("reset").disabled = true;
 			document.getElementById("input").disabled = true;
@@ -172,18 +173,18 @@ function playSpook(coordinates) {
 }
 
 // Zooms slowly to a point playing spooky music.
-// Optional callback
-function panZoomPoint(x,y,width,callback) {
+function panZoomPoint(x,y,width, randomed) {
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
 		var r = width * .2;
+		
 		// Draw circle
 		drawCircle(x,y,r);
 
 		// Draw illuminati
-		ilum = document.getElementById("ilum");
+		ilum = document.getElementById("ilum")
 
-		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
+		ctx.drawImage(ufo, x - r/2, y - r/2, r, r);
 		
 		document.getElementById("reset").disabled = false;
 		
@@ -200,9 +201,6 @@ function panZoomPoint(x,y,width,callback) {
 		
 		title.innerHTML = phrase
 		
-		if(callback) {
-			callback()	
-		}
 		
 	}, 5000 * scaleFactor);
 	
