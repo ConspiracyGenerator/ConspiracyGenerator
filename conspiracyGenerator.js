@@ -1,3 +1,5 @@
+//ask about checking the true file type
+
 // Debug alert function
 dAlert = function(string) {
 	alert(string)
@@ -16,9 +18,14 @@ enableSubmit = function() {
 processInput = function() {
 
 	var file = document.getElementById("input").files[0];
+	var imageReg = /\.(jpg|jpeg|png|gif|bmp)$/;
+	if (imageReg.test(file.name)) {
+		console.log("valid");
+	}
+	else { console.log("invalid"); }
+	
 	console.log(document.getElementById("input").files);
 	console.log(file)
-	dAlert(file.name);
 	
 }
 
