@@ -8,7 +8,6 @@ dAlert = function(string) {
 // Globals
 var c, ctx, img
 
-
 window.onload = function() {
 	//alert("hello world");
 	document.getElementById("input").onchange = enableSubmit;
@@ -16,7 +15,8 @@ window.onload = function() {
 	document.getElementById("play").onclick = (function() {
 		return panZoomPoint(400,250)
 	})
-	do
+	document.getElementById("reset").onclick = reset
+
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
@@ -85,6 +85,7 @@ panZoomPoint = function(x,y) {
 }
 
 zoomPoint = function(x, y, scaleFactor) {
+	
 	var pt = ctx.transformedPoint(x,y)
 	ctx.translate(pt.x,pt.y)
 	ctx.scale(scaleFactor,scaleFactor)
@@ -92,8 +93,6 @@ zoomPoint = function(x, y, scaleFactor) {
 	redraw();
 		
 }
-
-
 
 // Redefines some CTX functions and sets up an 
 // SVG matrix for zooming.
@@ -138,6 +137,15 @@ setUpZoom = function() {
 	}
 
 }	
+
+reset = function() {
+
+	ctx.clearRect(0, 0, c.width, c.height);
+	var audio = document.getElementById("audio")
+	audio.pause();
+	audio.load();
+		
+}
 
 
 
