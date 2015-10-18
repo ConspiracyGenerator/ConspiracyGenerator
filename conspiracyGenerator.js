@@ -158,6 +158,7 @@ function findFaces() {
 function playSpook(coordinates) {
 	
 	toggleLoading();
+	document.getElementById("play").disabled = true;
 	
 	var audio = document.getElementById("audio")
 	audio.play();
@@ -167,11 +168,11 @@ function playSpook(coordinates) {
 	ctx.drawImage(waitImg, 0, 0, c.width, c.height);
 	
 	timer = setTimeout( function() {
+			
 			panZoomPoint(coordinates[0], coordinates[1],coordinates[2])
 
 			document.getElementById("reset").disabled = true;
 			document.getElementById("input").disabled = true;
-			document.getElementById("play").disabled = true;
 			document.getElementById("submit").disabled = true;
 	},3000)
 
