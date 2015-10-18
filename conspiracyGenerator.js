@@ -20,6 +20,7 @@ window.onload = function() {
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
+	ctx.save();
 	setUpZoom()
 	
 }
@@ -141,6 +142,7 @@ setUpZoom = function() {
 reset = function() {
 
 	ctx.clearRect(0, 0, c.width, c.height);
+	ctx.restore();
 	var audio = document.getElementById("audio")
 	audio.pause();
 	audio.load();
