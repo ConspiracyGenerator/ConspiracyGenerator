@@ -5,7 +5,9 @@ dAlert = function(string) {
 	alert(string)
 }
 
-var c, ctx, img;
+// Globals
+var c, ctx, img
+
 
 window.onload = function() {
 	//alert("hello world");
@@ -14,6 +16,7 @@ window.onload = function() {
 	document.getElementById("play").onclick = (function() {
 		return panZoomPoint(400,250)
 	})
+	do
 	
 	c = document.getElementById("imgC");
 	ctx = c.getContext("2d");
@@ -75,7 +78,8 @@ panZoomPoint = function(x,y) {
 		zoomPoint(x,y, scaleFactor);	
 	}, 100);
 	
-	var audio = document.getElementById("audio");
+	
+	var audio = document.getElementById("audio")
 	audio.play();
 		
 }
