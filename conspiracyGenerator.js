@@ -68,19 +68,32 @@ function processInput() {
 			img.src = reader.result;
 			img.onload = function() {
 				
+				// Approx Scale of zoom, circle, and iluminati
 				scaleFactor = 1.01 + 0.002 * img.width/100
-				//dAlert(scaleFactor)
 				if(scaleFactor <= 1) {
 					scaleFactor = 1.01
 				} 
 				if(scaleFactor > 1.04) {
 					scaleFactor = 1.04
 				}
-
+				
+				
+				ctx.canvas.width = img.width
+				ctx.canvas.height = img.height
+				
+				while(img.height > c.height || img.width > c.width) {
+					
+					img.height -= img.height * 0.1
+					img.width -= img.width * 0.1
+					
+					c.height -= c.height * 0.1
+					c.width -= c.width * 0.1
+				
+				}
+				
 				
 				ctx.drawImage(img, 0, 0, c.width, c.height);
-				
-				//document.getElementById("find").disabled = false;
+	
 
 				redraw();
 			}
