@@ -13,9 +13,7 @@ window.onload = function() {
 	document.getElementById("input").onchange = enableSubmit;
 	document.getElementById("submit").onclick = processInput;
 
-	document.getElementById("play").onclick = (function() {
-		return panZoomPoint(400,250)
-	})
+	document.getElementById("play").onclick = playSpook
 	document.getElementById("reset").onclick = reset
 
 
@@ -28,6 +26,7 @@ window.onload = function() {
 	setUpZoom()
 	
 }
+
 
 findTriangle = function() {
 	var input = [
@@ -91,11 +90,36 @@ redraw = function() {
 	
 }
 
-panZoomPoint = function(x,y) {
+playSpook = function() {
+	
+	panZoomPoint(400,250)
+	document.getElementById("reset").disabled = true;
+	document.getElementById("input").disabled = true;
+	document.getElementById("play").disabled = true;
+	document.getElementById("submit").disabled = true;
+
+
+	
+}
+
+// Zooms slowly to a point playing spooky music.
+// Optional callback
+panZoomPoint = function(x,y,callback) {
 	var scaleFactor = 1.05;
 	var endTimer = setTimeout(function() {
 		window.clearInterval(timer);
+		
 		dAlert("done!");
+		
+		document.getElementById("reset").disabled = false;
+		document.getElementById("input").disabled = false;
+		document.getElementById("play").disabled = false;
+		document.getElementById("submit").disabled = false;
+		
+		if(callback) {
+			callback()	
+		}
+		
 	}, 5000);
 	
 	var timer = setInterval(function() {
@@ -163,9 +187,10 @@ setUpZoom = function() {
 }	
 
 reset = function() {
-
+	
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.restore();
+	ctx.save();
 	var audio = document.getElementById("audio")
 	audio.pause();
 	audio.load();
