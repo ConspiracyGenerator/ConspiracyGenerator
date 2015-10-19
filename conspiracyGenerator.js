@@ -61,9 +61,18 @@ function processInput() {
 					scaleFactor = 1.04
 				}
 				
+				while (img.width > 2048) {
+					img.width = img.width / 2;
+				}
+				while (img.height > 2048) {
+					img.height = img.height / 2;	
+				}
 				
+				//if (img.height > 
 				ctx.canvas.width = img.width
 				ctx.canvas.height = img.height
+				
+				
 				
 				ctx.drawImage(img, 0, 0, img.width, img.height, 0,0,c.width, c.height);
 	
