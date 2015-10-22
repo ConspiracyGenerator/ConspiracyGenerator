@@ -9,13 +9,13 @@ function dAlert(string) {
 var c, ctx, img, scaleFactor
 
 // Random phrases
-var phrases = ["Can't explain that, science!", "Lizard man spotted.", "Aliens?", "Illuminati Confirmed.",
-"Wake up sheepul!", "Lizard woman spotted.", "Coincidence?"]
+var phrases = ["Can't explain that, science!", "Lizard man spotted."
+, "Aliens?", "Illuminati Confirmed."
+, "Wake up sheepul!", "Lizard woman spotted.", "Coincidence?"]
 
 window.onload = function() {
 	//alert("hello world");
-	document.getElementById("input").onchange = enableSubmit;
-	document.getElementById("submit").onclick = processInput;
+	document.getElementById("input").onchange = processInput;
 
 	document.getElementById("play").onclick = findPoint;
 	document.getElementById("reset").onclick = reset;
@@ -27,11 +27,6 @@ window.onload = function() {
 	ctx.save();
 	setUpZoom()
 	
-}
-
-
-function enableSubmit() {
-	document.getElementById("submit").disabled = false;
 }
 
 function processInput() {
@@ -83,8 +78,6 @@ function processInput() {
 		reader.readAsDataURL(file);
 		console.log("sending file");
 		
-		document.getElementById("submit").disabled = true;
-		
 	}
 	else { dAlert("ERROR: INVALID IMAGE EXTENSION"); }
 	
@@ -100,7 +93,8 @@ function redraw() {
 function findPoint() {
 	
 	toggleLoading()
-
+	document.getElementById("play").disabled = true;
+	document.getElementById("input").disabled = true;
 
 	function getTriangleData(result) {	
 		
@@ -189,7 +183,6 @@ function findPoint() {
 function playSpook(coordinates) {
 	
 	toggleLoading();
-	document.getElementById("play").disabled = true;
 	
 	var audio = document.getElementById("audio")
 	audio.play();
@@ -201,9 +194,6 @@ function playSpook(coordinates) {
 	timer = setTimeout( function() {
 
 			panZoomPoint(coordinates[0], coordinates[1])
-			document.getElementById("reset").disabled = true;
-			document.getElementById("input").disabled = true;
-			document.getElementById("submit").disabled = true;
 	},3000)
 
 }
@@ -230,16 +220,6 @@ function panZoomPoint(x, y, callback) {
 		}
 		*/
 		ctx.drawImage(ilum, x - r/2, y - r/2, r, r);
-		
-		
-		document.getElementById("reset").disabled = false;
-		
-		document.getElementById("input").disabled = false;
-		document.getElementById("play").disabled = false;
-		document.getElementById("submit").disabled = false;
-		document.getElementById("input").style.display = "none";
-		document.getElementById("play").style.display = "none";
-		document.getElementById("submit").style.display = "none";
 
 		title = document.getElementById("title")
 		random = Math.floor(Math.random() * 7)
